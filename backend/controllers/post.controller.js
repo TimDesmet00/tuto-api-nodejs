@@ -57,4 +57,15 @@ module.exports.likePost = async (req, res) => {
   }
 };
 
-module.exports.dislikePost = async (req, res) => {};
+module.exports.dislikePost = async (req, res) => {
+  try {
+    const data = await PostModels.findByIdAndUpdate(
+      req.params.id,
+      { $pull: { likers: req.body.userId } },
+      { new: true }
+    );
+    res.status(200).send(data);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
